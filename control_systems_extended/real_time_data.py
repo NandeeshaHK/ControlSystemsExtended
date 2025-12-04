@@ -7,32 +7,7 @@ import pandas
 from PIL import Image
 import numpy as np
 
-# Load the image
-image_path = "/home/nerdnhk/Jet_download/test_cam_4/images/nvcamtest_8766_s00_00127.jpg"  # Replace with the actual path to your image
-csv_path = '/home/nerdnhk/Jet_download/test_cam_4/results.csv'
-image_name = os.path.basename(image_path)
-index = int(image_name[-9:-4])
-image = cv2.imread(image_path)
 
-# GSD 
-GSD = 0.36
-
-# Read CSV file
-df = pandas.read_csv(csv_path)
-row = df.loc[index]
-
-# Get the screen dimensions
-screen_width, screen_height = 1600, 926  # Replace with your actual screen resolution
-
-# Calculate the scaling factors
-scale_x = screen_width / image.shape[1]
-scale_y = screen_height / image.shape[0]
-
-# Choose the smaller scaling factor to maintain the original resolution
-scale = min(scale_x, scale_y)
-
-# Resize the image
-resized_image = cv2.resize(image, None, fx=scale, fy=scale)
 
 def newlatlon(lat , lon , hdg ,dist, movementHead):
     lati=math.radians(lat)
@@ -143,13 +118,41 @@ def update_data(event, x, y, flags, param):
         plot_lines_based_on_yaw(updated_image, 30, lati, longi, angle, lat_to_use, long_to_use)
 
 
-# Create a window and set the callback function for mouse events
-cv2.namedWindow("Image with Real-Time Data")
-cv2.setMouseCallback("Image with Real-Time Data", update_data)
+if __name__ == "__main__":
+    # Load the image
+    image_path = "/home/nerdnhk/Jet_download/test_cam_4/images/nvcamtest_8766_s00_00127.jpg"  # Replace with the actual path to your image
+    csv_path = '/home/nerdnhk/Jet_download/test_cam_4/results.csv'
+    image_name = os.path.basename(image_path)
+    index = int(image_name[-9:-4])
+    image = cv2.imread(image_path)
 
-# Display the initial image
-cv2.imshow("Image with Real-Time Data", resized_image)
+    # GSD 
+    GSD = 0.36
 
-# Wait for a key event to close the window
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+    # Read CSV file
+    df = pandas.read_csv(csv_path)
+    row = df.loc[index]
+
+    # Get the screen dimensions
+    screen_width, screen_height = 1600, 926  # Replace with your actual screen resolution
+
+    # Calculate the scaling factors
+    scale_x = screen_width / image.shape[1]
+    scale_y = screen_height / image.shape[0]
+
+    # Choose the smaller scaling factor to maintain the original resolution
+    scale = min(scale_x, scale_y)
+
+    # Resize the image
+    resized_image = cv2.resize(image, None, fx=scale, fy=scale)
+
+    # Create a window and set the callback function for mouse events
+    cv2.namedWindow("Image with Real-Time Data")
+    cv2.setMouseCallback("Image with Real-Time Data", update_data)
+
+    # Display the initial image
+    cv2.imshow("Image with Real-Time Data", resized_image)
+
+    # Wait for a key event to close the window
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()

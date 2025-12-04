@@ -24,19 +24,23 @@ baud1 = 57600
 # Fill the required range, default 100m
 wp_range = 100 
 
-# Start a connection listening on a UDP port
-print("Trying to establish a MavLink connection with the Drone...")
-the_connection = mavutil.mavlink_connection(MAVLINK_ID1)
+the_connection = None
+wp = None
 
-# Wait for the first heartbeat 
-print("Waiting For HeartBeat")
-the_connection.wait_heartbeat()
-
-# This sets the system and component ID of remote system for the link
-print("Heartbeat from system (system %u component %u)" % (the_connection.target_system, the_connection.target_component))
-
-print("Loading Waypoint Loader")
-wp = mavwp.MAVWPLoader() 
+def connect_drone():
+    global the_connection, wp
+    print("Trying to establish a MavLink connection with the Drone...")
+    the_connection = mavutil.mavlink_connection(MAVLINK_ID1)
+    
+    # Wait for the first heartbeat 
+    print("Waiting For HeartBeat")
+    the_connection.wait_heartbeat()
+    
+    # This sets the system and component ID of remote system for the link
+    print("Heartbeat from system (system %u component %u)" % (the_connection.target_system, the_connection.target_component))
+    
+    print("Loading Waypoint Loader")
+    wp = mavwp.MAVWPLoader() 
 
 no_tries = 0
 wp_list = []
@@ -353,6 +357,8 @@ def check_global_pos(the_connecition):
             break
 
 async def run():
+    if the_connection is None:
+        connect_drone()
     beep()
     #Convert all the waypoints to csv files
     wpToCSV(waypoints_dir)
