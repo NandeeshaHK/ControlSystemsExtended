@@ -1,16 +1,10 @@
-from .Auto_mission import *
-from .GPT_controls import *
-from .distance_lat_lon import *
-from .dronekit_basics import *
-from .get_mode import *
-from .get_status import *
-from .is_armed import *
-from .is_inside_search_grid import *
-from .mavlink_basics import *
-from .mission_item import *
-from .param_rate_set import *
-from .read_wps import *
-from .read_wps_pymavlink import *
-from .real_time_data import *
-from .retrieve_params import *
-from .retrieve_specific_params import *
+from .core import connection
+from .telemetry import status, vision
+from .mission import manager, loader
+from .navigation import basic, guided
+from .params import manager as params_manager
+from .utils import math, geometry
+
+# Expose key classes/functions for easy access
+from .core.connection import connect_mavlink, connect_dronekit
+from .mission.manager import MissionManager

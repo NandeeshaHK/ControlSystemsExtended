@@ -16,26 +16,40 @@ Or install locally:
 pip install .
 ```
 
-## Usage
+## SDK Usage
 
-You can import modules individually:
+The package is organized into modular components for easier use.
 
+### Connecting
 ```python
-from control_systems_extended import Auto_mission
-from control_systems_extended import GPT_controls
+from control_systems_extended.core import connect_mavlink
+connection = connect_mavlink('udp:127.0.0.1:14550')
 ```
 
-Or import everything:
-
+### Telemetry
 ```python
-from control_systems_extended import *
+from control_systems_extended.telemetry import status
+mode = status.get_mode(connection)
+print(f"Current Mode: {mode}")
 ```
 
-### Running Scripts
+### Mission Management
+```python
+from control_systems_extended.mission import MissionManager
+manager = MissionManager(connection)
+manager.clear_mission()
+```
 
-To run the scripts directly, you can use:
+## Examples
 
+Check the `examples/` directory for complete scripts:
+
+- `examples/basic_telemetry.py`: Connects and prints status.
+- `examples/mission_execution.py`: Loads and manages missions.
+- `examples/guided_control.py`: Demonstrates guided mode control.
+- `examples/vision_processing.py`: Utilities for vision-based navigation.
+
+To run an example:
 ```bash
-python -m control_systems_extended.Auto_mission
-python -m control_systems_extended.mavlink_basics
+python examples/basic_telemetry.py
 ```
